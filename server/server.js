@@ -1,14 +1,26 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
+const findTollCollectors = require('./findTollCollectors');
 
-var app = express();
+// CORS Express middleware to enable CORS Requests.
+const cors = require('cors');
 
-app.use(bodyParser.json());
+const corsOptions = {
+  origin: '*',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+}
 
-app.post('/todos', (req, res) => {
+const app = express();
 
-});
+app.use(bodyParser.json({
+  limit: '50mb'
+}));
 
-app.listen(3000, () => {
-  console.log('Started on port 3000');
+app.options('*', cors());
+
+app.post('/findTollCollectors', cors(), findTollCollectors);
+
+app.listen(1337, () => {
+  console.log('Started on port 1337');
 });
