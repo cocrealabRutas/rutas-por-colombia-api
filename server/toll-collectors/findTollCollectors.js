@@ -27,33 +27,43 @@ module.exports = (req, res) => {
 
   const {
     body: {
-      routes
+      routes,
+      category,
     }
   } = req;
-  if (!routes) {
+  if (_.isEmpty(routes) || !_.isNumber(category)) {
     return handleResponse(400);
   }
   try {
     let tollCollectorsOnRoute = [];
+    let totalPrice = 0;
     routes.forEach(({
       lat,
       lng
     }) => {
-      tollCollectors.forEach(coordenada => {
+      tollCollectors.forEach(tollCollector => {
         const p1 = turf.point([lat, lng]);
         const p2 = turf.point([
-          coordenada.coordenadas.lat,
-          coordenada.coordenadas.lng,
+          tollCollector.coordenadas.lat,
+          tollCollector.coordenadas.lng,
         ]);
         const distance = turf.distance(p1, p2);
         if (distance < 0.05) {
-          tollCollectorsOnRoute.push(coordenada);
+          const price = tollCollector.categoria[category];
+          if (price) {
+            totalPrice += price;
+          } else {
+            totalPrice += tollCollector.categoria[4];
+          }
+          tollCollectorsOnRoute.push(tollCollector);
         }
       });
     });
-    const markers = [];
     tollCollectorsOnRoute = _.uniq(tollCollectorsOnRoute);
-    return handleResponse(200, tollCollectorsOnRoute);
+    return handleResponse(200, {
+      tollCollectorsOnRoute,
+      totalPrice,
+    });
   } catch (error) {
     return handleError(error);
   }

@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const findTollCollectors = require("./findTollCollectors");
+const findTollCollectors = require("./toll-collectors/findTollCollectors");
 
 // CORS Express middleware to enable CORS Requests.
 const cors = require("cors");
