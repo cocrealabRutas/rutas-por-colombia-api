@@ -19,7 +19,9 @@ app.use(bodyParser.json({
 
 app.options('*', cors());
 
-app.post('/findTollCollectors', cors(), findTollCollectors);
+app.use(cors())
+
+app.post('/findTollCollectors', findTollCollectors);
 
 app.listen(1337, () => {
   console.log('Started on port 1337');
