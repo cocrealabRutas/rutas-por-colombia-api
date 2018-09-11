@@ -1,7 +1,7 @@
-const turf = require('turf');
-const _ = require('lodash');
-const moment = require('moment');
-const tollCollectors = require('./tollCollectors');
+const turf = require("turf");
+const _ = require("lodash");
+const moment = require("moment");
+const tollCollectors = require("./tollCollectors");
 
 module.exports = (req, res) => {
   const handleError = error => {
@@ -27,29 +27,25 @@ module.exports = (req, res) => {
   }
 
   const {
-    body: {
-      routes,
-      category,
-      totalDistance,
-      totalTime,
-    }
+    body: { routes, category, totalDistance, totalTime }
   } = req;
-  if (_.isEmpty(routes) || !_.isNumber(category) ||
-    !_.isNumber(totalDistance) || !_.isNumber(totalTime)) {
+  if (
+    _.isEmpty(routes) ||
+    !_.isNumber(category) ||
+    !_.isNumber(totalDistance) ||
+    !_.isNumber(totalTime)
+  ) {
     return handleResponse(400);
   }
   try {
     let tollCollectorsOnRoute = [];
     let totalPrice = 0;
-    routes.forEach(({
-      lat,
-      lng
-    }) => {
+    routes.forEach(({ lat, lng }) => {
       tollCollectors.forEach(tollCollector => {
         const p1 = turf.point([lat, lng]);
         const p2 = turf.point([
           tollCollector.coordenadas.lat,
-          tollCollector.coordenadas.lng,
+          tollCollector.coordenadas.lng
         ]);
         const distance = turf.distance(p1, p2);
         if (distance < 0.05) {
@@ -64,9 +60,9 @@ module.exports = (req, res) => {
       });
     });
     tollCollectorsOnRoute = _.uniq(tollCollectorsOnRoute);
-    const duration = moment.duration(totalTime, 'seconds');
-    const durationString = `${ duration.hours()}h ${duration.minutes()}min`;
-    const totalDistanceString = `${totalDistance / 1000} km`
+    const duration = moment.duration(totalTime, "seconds");
+    const durationString = `${duration.hours()}h ${duration.minutes()}min`;
+    const totalDistanceString = `${(totalDistance / 1000).toFixed(2)} km`;
     return handleResponse(200, {
       tollCollectorsOnRoute,
       totalPrice,
@@ -76,4 +72,4 @@ module.exports = (req, res) => {
   } catch (error) {
     return handleError(error);
   }
-}
+};
