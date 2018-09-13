@@ -49,17 +49,19 @@ module.exports = (req, res) => {
         ]);
         const distance = turf.distance(p1, p2);
         if (distance < 0.05) {
-          const price = tollCollector.categoria[category];
-          if (price) {
-            totalPrice += price;
-          } else {
-            totalPrice += tollCollector.categoria[4];
-          }
           tollCollectorsOnRoute.push(tollCollector);
         }
       });
     });
     tollCollectorsOnRoute = _.uniq(tollCollectorsOnRoute);
+    tollCollectorsOnRoute.forEach(({ categoria }) => {
+      const price = categoria[category];
+      if (_.isNumber(price)) {
+        totalPrice += price;
+      } else {
+        totalPrice += categoria[4];
+      }
+    });
     const duration = moment.duration(totalTime, "seconds");
     const durationString = `${duration.hours()}h ${duration.minutes()}min`;
     const totalDistanceString = `${(totalDistance / 1000).toFixed(2)} km`;
