@@ -5,6 +5,7 @@ const swaggerUi = require('swagger-ui-express');
 const Boom = require('boom');
 const router = express.Router();
 const compression = require('compression');
+const helmet = require('helmet');
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -25,6 +26,7 @@ const app = express();
 app.use(compression());
 app.options('*', cors());
 app.use(cors());
+app.use(helmet());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 

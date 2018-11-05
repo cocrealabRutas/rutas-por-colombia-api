@@ -19,6 +19,7 @@
     "compression": "^1.7.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "helmet": "^3.14.0",
     "http-status": "^1.2.0",
     "joi": "^14.0.4",
     "jsonwebtoken": "^8.3.0",

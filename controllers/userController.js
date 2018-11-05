@@ -16,9 +16,9 @@ router.post(
       const user = new User(body);
       await user.save();
       const token = await user.generateAuthToken();
-      return res.header('x-auth', token).send(user);
+      return res.send({ user, token });
     } catch (e) {
-      return next(boom.badImplementation(e));
+      return next(boom.badRequest(e));
     }
   }),
 );
@@ -34,9 +34,9 @@ router.post(
       const body = _.pick(req.body, ['email', 'password']);
       const user = await User.findByCredentials(body.email, body.password);
       const token = await user.generateAuthToken();
-      return res.header('x-auth', token).send(user);
+      return res.send({ user, token });
     } catch (e) {
-      return next(boom.badImplementation());
+      return next(boom.badRequest());
     }
   }),
 );
@@ -49,7 +49,7 @@ router.delete(
       await req.user.removeToken(req.token);
       return res.status(200).send();
     } catch (e) {
-      return next(boom.badImplementation());
+      return next(boom.badRequest());
     }
   }),
 );
