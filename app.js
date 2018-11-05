@@ -10,9 +10,13 @@ const errorHandler = require('./middleware/errorHandler');
 
 const docs = require('./startup/docs');
 
+// DB
+require('./db/mongoose');
+
 // Controllers
 const pingController = require('./controllers/pingController');
 const tollCollectorsController = require('./controllers/tollCollectorsController');
+const userController = require('./controllers/userController');
 
 // Express Configuration
 const app = express();
@@ -28,6 +32,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use('/api-docs', swaggerUi.serve, router.get('/', swaggerUi.setup(docs)));
 app.use('/ping', pingController);
 app.use('/tollCollectors', tollCollectorsController);
+app.use('/users', userController);
 
 // Error Handling
 app.use('*', (req, res, next) => next(Boom.notFound()));

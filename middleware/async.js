@@ -6,7 +6,7 @@ const asyncMiddleware = fn => (req, res, next) => {
     if (!err.isBoom) {
       return next(boom.badImplementation(err));
     }
-    next(err);
+    return next(err);
   });
 };
 
