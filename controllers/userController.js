@@ -3,17 +3,35 @@ const boom = require('boom');
 const _ = require('lodash');
 const asyncMiddleware = require('../middleware/async');
 const { User } = require('../models/user');
-const { authenticate } = require('../middleware/authenticate');
+const {
+  authenticate,
+  authenticateAdmin,
+} = require('../middleware/authenticate');
 
 const router = express.Router();
 
-// POST /users
 router.post(
   '/',
   asyncMiddleware(async (req, res, next) => {
     try {
       const body = _.pick(req.body, ['email', 'password']);
       const user = new User(body);
+      await user.save();
+      const token = await user.generateAuthToken();
+      return res.send({ user, token });
+    } catch (e) {
+      return next(boom.badRequest(e));
+    }
+  }),
+);
+
+router.post(
+  '/admin',
+  authenticateAdmin,
+  asyncMiddleware(async (req, res, next) => {
+    try {
+      const body = _.pick(req.body, ['email', 'password']);
+      const user = new User({ ...body, role: 0 });
       await user.save();
       const token = await user.generateAuthToken();
       return res.send({ user, token });

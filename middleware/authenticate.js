@@ -31,4 +31,24 @@ const authenticate = (req, res, next) => {
     );
 };
 
-module.exports = { authenticate };
+const authenticateAdmin = (req, res, next) => {
+  const token = getToken(req);
+  if (!token) next(boom.unauthorized('Access Token missing from header'));
+  return User.findByToken(token)
+    .then(user => {
+      if (!user) {
+        return Promise.reject();
+      }
+      if (user.role !== 0) {
+        return Promise.reject();
+      }
+      req.user = user;
+      req.token = token;
+      return next();
+    })
+    .catch(() =>
+      next(boom.unauthorized('Not authorized to perform this action')),
+    );
+};
+
+module.exports = { authenticate, authenticateAdmin };

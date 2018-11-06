@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema({
     require: true,
     minlength: 6,
   },
+  role: {
+    type: Number,
+    require: true,
+    default: 1,
+  },
   tokens: [
     {
       access: {

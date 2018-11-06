@@ -58,7 +58,7 @@
           "user"
         ],
         "summary": "Create user",
-        "description": "This can only be done by the logged in user.",
+        "description": "",
         "operationId": "createUser",
         "produces": [
           "application/json"
@@ -100,6 +100,69 @@
           },
           "400": {
             "description": "Missing email or password fields"
+          }
+        }
+      }
+    },
+    "/user/admin": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create admin user",
+        "description": "This can only be done by the admin logged in user.",
+        "operationId": "createAdminUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Access token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "integer",
+                      "description": "The user ID"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The user email"
+                    }
+                  }
+                },
+                "token": {
+                  "type": "string",
+                  "description": "User access JWT token"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing email or password fields"
+          },
+          "401": {
+            "description": "Access Token missing from header or Not authorized to perform this action. Only admin user perform this action."
           }
         }
       }
