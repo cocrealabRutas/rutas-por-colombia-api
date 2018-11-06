@@ -9,7 +9,7 @@ const helmet = require('helmet');
 
 const errorHandler = require('./middleware/errorHandler');
 
-const docs = require('./startup/docs');
+const swaggerDocument = require('./docs.json');
 
 // DB
 require('./db/mongoose');
@@ -31,10 +31,14 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // App routes
-app.use('/api-docs', swaggerUi.serve, router.get('/', swaggerUi.setup(docs)));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  router.get('/', swaggerUi.setup(swaggerDocument)),
+);
 app.use('/ping', pingController);
 app.use('/tollCollectors', tollCollectorsController);
-app.use('/users', userController);
+app.use('/user', userController);
 
 // Error Handling
 app.use('*', (req, res, next) => next(Boom.notFound()));

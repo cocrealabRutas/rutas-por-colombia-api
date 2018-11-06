@@ -57,7 +57,7 @@ router.post(
         totalDistanceString,
       });
     } catch (err) {
-      return next(boom.badImplementation(err.message));
+      return next(boom.badRequest(err.message));
     }
   }),
 );
