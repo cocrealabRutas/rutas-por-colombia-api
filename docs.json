@@ -219,6 +219,61 @@
         }
       }
     },
+    "/user/login/admin": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs admin user into the system",
+        "description": "",
+        "operationId": "loginUserAdmin",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "User Admin login",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "integer",
+                      "description": "The user ID"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The user email"
+                    }
+                  }
+                },
+                "token": {
+                  "type": "string",
+                  "description": "User access JWT token"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized to perform this action, only admin user have access"
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          }
+        }
+      }
+    },
     "/user/me": {
       "get": {
         "tags": [

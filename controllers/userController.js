@@ -59,6 +59,23 @@ router.post(
   }),
 );
 
+router.post(
+  '/login/admin',
+  asyncMiddleware(async (req, res, next) => {
+    try {
+      const body = _.pick(req.body, ['email', 'password']);
+      const user = await User.findByCredentials(body.email, body.password);
+      if (user.role !== 0) {
+        return next(boom.unauthorized('Not authorized to perform this action'));
+      }
+      const token = await user.generateAuthToken();
+      return res.send({ user, token });
+    } catch (e) {
+      return next(boom.badRequest());
+    }
+  }),
+);
+
 router.delete(
   '/me/token',
   authenticate,
