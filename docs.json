@@ -82,12 +82,13 @@
                   "type": "object",
                   "properties": {
                     "_id": {
-                      "type": "integer",
-                      "description": "The user ID"
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
                     },
                     "email": {
-                      "type": "string",
-                      "description": "The user email"
+                      "type": "string"
                     }
                   }
                 },
@@ -142,12 +143,13 @@
                   "type": "object",
                   "properties": {
                     "_id": {
-                      "type": "integer",
-                      "description": "The user ID"
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
                     },
                     "email": {
-                      "type": "string",
-                      "description": "The user email"
+                      "type": "string"
                     }
                   }
                 },
@@ -197,12 +199,13 @@
                   "type": "object",
                   "properties": {
                     "_id": {
-                      "type": "integer",
-                      "description": "The user ID"
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
                     },
                     "email": {
-                      "type": "string",
-                      "description": "The user email"
+                      "type": "string"
                     }
                   }
                 },
@@ -249,12 +252,13 @@
                   "type": "object",
                   "properties": {
                     "_id": {
-                      "type": "integer",
-                      "description": "The user ID"
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
                     },
                     "email": {
-                      "type": "string",
-                      "description": "The user email"
+                      "type": "string"
                     }
                   }
                 },
@@ -299,12 +303,13 @@
               "type": "object",
               "properties": {
                 "_id": {
-                  "type": "integer",
-                  "description": "The user ID"
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
                 },
                 "email": {
-                  "type": "string",
-                  "description": "The user email"
+                  "type": "string"
                 }
               }
             }
