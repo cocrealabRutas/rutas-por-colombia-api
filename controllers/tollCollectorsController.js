@@ -7,7 +7,6 @@ const _ = require('lodash');
 const moment = require('moment');
 const asyncMiddleware = require('../middleware/async');
 const { authenticateAdmin } = require('../middleware/authenticate');
-const tollCollectors = require('./tollCollectors');
 const { Toll } = require('../models/toll');
 
 const router = express.Router();
@@ -27,12 +26,13 @@ router.post(
     try {
       let tollCollectorsOnRoute = [];
       let totalPrice = 0;
+      const tolls = await Toll.find({});
       routes.forEach(({ lat, lng }) => {
-        tollCollectors.forEach(tollCollector => {
+        tolls.forEach(tollCollector => {
           const p1 = turf.point([lat, lng]);
           const p2 = turf.point([
-            tollCollector.coordenadas.lat,
-            tollCollector.coordenadas.lng,
+            tollCollector.coordinates.lat,
+            tollCollector.coordinates.lng,
           ]);
           const distance = turf.distance(p1, p2);
           if (distance < 0.05) {
@@ -41,12 +41,12 @@ router.post(
         });
       });
       tollCollectorsOnRoute = _.uniq(tollCollectorsOnRoute);
-      tollCollectorsOnRoute.forEach(({ categoria }) => {
-        const price = categoria[category];
+      tollCollectorsOnRoute.forEach(({ prices }) => {
+        const price = prices[category];
         if (_.isNumber(price)) {
           totalPrice += price;
         } else {
-          totalPrice += categoria[4];
+          totalPrice += prices[4];
         }
       });
       const duration = moment.duration(totalTime, 'seconds');
@@ -59,7 +59,7 @@ router.post(
         totalDistanceString,
       });
     } catch (err) {
-      return next(boom.badRequest(err.message));
+      return next(boom.badRequest(err));
     }
   }),
 );
