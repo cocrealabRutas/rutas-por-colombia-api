@@ -6,7 +6,9 @@ const turf = require('turf');
 const _ = require('lodash');
 const moment = require('moment');
 const asyncMiddleware = require('../middleware/async');
+const { authenticateAdmin } = require('../middleware/authenticate');
 const tollCollectors = require('./tollCollectors');
+const { Toll } = require('../models/toll');
 
 const router = express.Router();
 
@@ -58,6 +60,41 @@ router.post(
       });
     } catch (err) {
       return next(boom.badRequest(err.message));
+    }
+  }),
+);
+
+router.put(
+  '/',
+  authenticateAdmin,
+  asyncMiddleware(async (req, res, next) => {
+    try {
+      const schema = Joi.object().keys({
+        data: Joi.array()
+          .required()
+          .min(1),
+      });
+      const { error } = Joi.validate(req.body, schema);
+      if (error) return next(boom.badRequest(error.details[0].message));
+      const { data } = req.body;
+      await Toll.remove({});
+      await Toll.insertMany(data);
+      return res.status(httpStatus.OK).send();
+    } catch (e) {
+      return next(boom.badRequest(e));
+    }
+  }),
+);
+
+router.get(
+  '/',
+  authenticateAdmin,
+  asyncMiddleware(async (req, res, next) => {
+    try {
+      const tolls = await Toll.find({});
+      return res.status(httpStatus.OK).send(tolls);
+    } catch (e) {
+      return next(boom.badRequest(e));
     }
   }),
 );
