@@ -33,15 +33,25 @@ const TouristAttractionSchema = new mongoose.Schema({
       require: true,
     },
   },
-  images: {
-    type: [String],
-    require: true,
-    minlength: 1,
-  },
+  images: [
+    {
+      id: {
+        type: String,
+        required: true,
+        trim: true,
+        unique: true,
+      },
+      url: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    },
+  ],
 });
 
 const TouristAttraction = mongoose.model(
-  'tourist_attraction',
+  'TouristAttraction',
   TouristAttractionSchema,
 );
 
