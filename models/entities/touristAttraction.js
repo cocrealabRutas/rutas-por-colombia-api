@@ -34,12 +34,6 @@ const TouristAttractionSchema = new mongoose.Schema({
   },
   images: [
     {
-      id: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true,
-      },
       url: {
         type: String,
         required: true,
@@ -63,13 +57,13 @@ function validateTouristAttraction(data) {
       .required(),
     activities: Joi.array()
       .items(Joi.string().required())
-      .min(1),
+      .min(1)
+      .required(),
     lat: Joi.string().required(),
     lng: Joi.string().required(),
     images: Joi.array()
       .items(
         Joi.object().keys({
-          id: Joi.string().required(),
           url: Joi.string().required(),
         }),
       )

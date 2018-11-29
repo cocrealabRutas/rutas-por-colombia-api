@@ -18,6 +18,7 @@ require('./db/mongoose');
 const pingController = require('./controllers/pingController');
 const tollCollectorsController = require('./controllers/tollCollectorsController');
 const userController = require('./controllers/userController');
+const entityController = require('./controllers/entityController');
 
 // Express Configuration
 const app = express();
@@ -39,6 +40,7 @@ app.use(
 app.use('/ping', pingController);
 app.use('/tollCollectors', tollCollectorsController);
 app.use('/user', userController);
+app.use('/entity', entityController);
 
 // Error Handling
 app.use('*', (req, res, next) => next(Boom.notFound()));
