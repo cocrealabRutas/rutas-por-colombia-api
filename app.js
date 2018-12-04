@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -6,6 +7,8 @@ const Boom = require('boom');
 const router = express.Router();
 const compression = require('compression');
 const helmet = require('helmet');
+const multer = require('multer');
+const uuidv4 = require('uuid/v4');
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -23,6 +26,27 @@ const entityController = require('./controllers/entityController');
 // Express Configuration
 const app = express();
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${uuidv4()}-${file.originalname}`);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
 // Middlewares
 app.use(compression());
 app.options('*', cors());
@@ -30,6 +54,8 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(multer({ storage: fileStorage, fileFilter }).single('image'));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // App routes
 app.use(
