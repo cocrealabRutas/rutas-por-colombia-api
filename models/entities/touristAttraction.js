@@ -39,6 +39,10 @@ const TouristAttractionSchema = new mongoose.Schema({
         required: true,
         trim: true,
       },
+      key: {
+        type: String,
+        required: true,
+      },
     },
   ],
 });
@@ -65,6 +69,7 @@ function validateTouristAttraction(data) {
       .items(
         Joi.object().keys({
           url: Joi.string().required(),
+          key: Joi.string().required(),
         }),
       )
       .min(1),

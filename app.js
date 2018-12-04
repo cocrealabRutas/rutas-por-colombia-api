@@ -22,6 +22,7 @@ const pingController = require('./controllers/pingController');
 const tollCollectorsController = require('./controllers/tollCollectorsController');
 const userController = require('./controllers/userController');
 const entityController = require('./controllers/entityController');
+const filesController = require('./controllers/filesController');
 
 // Express Configuration
 const app = express();
@@ -31,7 +32,9 @@ const fileStorage = multer.diskStorage({
     cb(null, 'images');
   },
   filename: (req, file, cb) => {
-    cb(null, `${uuidv4()}-${file.originalname}`);
+    const id = uuidv4();
+    req.key = id;
+    cb(null, `${id}-${file.originalname}`);
   },
 });
 
@@ -53,8 +56,13 @@ app.options('*', cors());
 app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(multer({ storage: fileStorage, fileFilter }).single('image'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  multer({
+    storage: fileStorage,
+    fileFilter,
+  }).single('image'),
+);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // App routes
@@ -67,6 +75,7 @@ app.use('/ping', pingController);
 app.use('/tollCollectors', tollCollectorsController);
 app.use('/user', userController);
 app.use('/entity', entityController);
+app.use('/files', filesController);
 
 // Error Handling
 app.use('*', (req, res, next) => next(Boom.notFound()));
