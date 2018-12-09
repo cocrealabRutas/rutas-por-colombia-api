@@ -13,7 +13,7 @@ router.post(
   asyncMiddleware(async (req, res, next) => {
     const image = req.file;
     if (!image) return next(boom.badRequest());
-    return res.status(httpStatus.OK).json({ key: req.key, url: image.path });
+    return res.status(httpStatus.OK).json({ key: req.key, path: image.path });
   }),
 );
 
