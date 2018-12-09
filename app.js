@@ -57,12 +57,6 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
-  multer({
-    storage: fileStorage,
-    fileFilter,
-  }).single('image'),
-);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // App routes
@@ -75,7 +69,14 @@ app.use('/ping', pingController);
 app.use('/tollCollectors', tollCollectorsController);
 app.use('/user', userController);
 app.use('/entity', entityController);
-app.use('/files', filesController);
+app.use(
+  '/files',
+  multer({
+    storage: fileStorage,
+    fileFilter,
+  }).single('image'),
+  filesController,
+);
 
 // Error Handling
 app.use('*', (req, res, next) => next(Boom.notFound()));
