@@ -23,6 +23,7 @@ const tollCollectorsController = require('./controllers/tollCollectorsController
 const userController = require('./controllers/userController');
 const entityController = require('./controllers/entityController');
 const filesController = require('./controllers/filesController');
+const touristAttractionsController = require('./controllers/touristAttractionsController');
 
 // Express Configuration
 const app = express();
@@ -77,6 +78,7 @@ app.use(
   }).single('image'),
   filesController,
 );
+app.use('/touristAttractions', touristAttractionsController);
 
 // Error Handling
 app.use('*', (req, res, next) => next(Boom.notFound()));
