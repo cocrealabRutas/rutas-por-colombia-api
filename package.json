@@ -4,6 +4,10 @@
   "description": "Service for Rutas por Colombia App",
   "private": true,
   "main": "index.js",
+  "engines": {
+    "npm": ">=5",
+    "node": ">=8.10.0"
+  },
   "scripts": {
     "test": "mocha --recursive tests",
     "dev": "nodemon index.js",
