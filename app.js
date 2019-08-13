@@ -9,6 +9,7 @@ const compression = require('compression');
 const helmet = require('helmet');
 const multer = require('multer');
 const uuidv4 = require('uuid/v4');
+const fs = require('fs');
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -30,7 +31,7 @@ const app = express();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'images');
+    cb(null, path.join(__dirname, '/images'));
   },
   filename: (req, file, cb) => {
     const id = uuidv4();
@@ -51,6 +52,12 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+try {
+  fs.mkdirSync(path.join(__dirname, '/images'));
+} catch (err) {
+  if (err.code !== 'EEXIST') throw err;
+}
+
 // Middlewares
 app.use(compression());
 app.options('*', cors());
@@ -58,7 +65,7 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, '/images')));
 
 // App routes
 app.use(
